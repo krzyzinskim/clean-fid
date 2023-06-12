@@ -332,7 +332,8 @@ def remove_custom_stats(name, mode="clean", model_name="inception_v3"):
 Cache a custom dataset statistics file
 """
 def make_custom_stats(name, fdir, num=None, mode="clean", model_name="inception_v3",
-                    num_workers=0, batch_size=64, device=torch.device("cuda"), verbose=True):
+                    num_workers=0, batch_size=64, device=torch.device("cuda"), verbose=True,
+                    custom_image_tranform=None):
     stats_folder = os.path.join(os.path.dirname(cleanfid.__file__), "stats")
     os.makedirs(stats_folder, exist_ok=True)
     split, res = "custom", "na"
@@ -349,13 +350,11 @@ def make_custom_stats(name, fdir, num=None, mode="clean", model_name="inception_
     if model_name=="inception_v3":
         feat_model = build_feature_extractor(mode, device)
         custom_fn_resize = None
-        custom_image_tranform = None
     elif model_name=="clip_vit_b_32":
         from cleanfid.clip_features import CLIP_fx, img_preprocess_clip
         clip_fx = CLIP_fx("ViT-B/32")
         feat_model = clip_fx
         custom_fn_resize = img_preprocess_clip
-        custom_image_tranform = None
     else:
         raise ValueError(f"The entered model name - {model_name} was not recognized.")
 
